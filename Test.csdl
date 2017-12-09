@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Test" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityContainer Name="TestEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CorrectOptionTables" EntityType="Test.CorrectOptionTable" />
+    <EntitySet Name="ExamTables" EntityType="Test.ExamTable" />
+    <EntitySet Name="OptionTables" EntityType="Test.OptionTable" />
+    <EntitySet Name="QuestionTables" EntityType="Test.QuestionTable" />
+    <EntitySet Name="ResultTables" EntityType="Test.ResultTable" />
+    <EntitySet Name="sysdiagrams" EntityType="Test.sysdiagram" />
+    <EntitySet Name="UserTables" EntityType="Test.UserTable" />
+    <AssociationSet Name="FK_CorrectOptionTable_QuestionTable" Association="Test.FK_CorrectOptionTable_QuestionTable">
+      <End Role="QuestionTable" EntitySet="QuestionTables" />
+      <End Role="CorrectOptionTable" EntitySet="CorrectOptionTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QuestionTable_ExamTable" Association="Test.FK_QuestionTable_ExamTable">
+      <End Role="ExamTable" EntitySet="ExamTables" />
+      <End Role="QuestionTable" EntitySet="QuestionTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ResultTable_ExamTable" Association="Test.FK_ResultTable_ExamTable">
+      <End Role="ExamTable" EntitySet="ExamTables" />
+      <End Role="ResultTable" EntitySet="ResultTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OptionTable_QuestionTable" Association="Test.FK_OptionTable_QuestionTable">
+      <End Role="QuestionTable" EntitySet="QuestionTables" />
+      <End Role="OptionTable" EntitySet="OptionTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ResultTable_UserTable" Association="Test.FK_ResultTable_UserTable">
+      <End Role="UserTable" EntitySet="UserTables" />
+      <End Role="ResultTable" EntitySet="ResultTables" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="CorrectOptionTable">
+    <Key>
+      <PropertyRef Name="QuestionİD" />
+    </Key>
+    <Property Name="QuestionİD" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CavabDuzgun" Type="String" Nullable="false" MaxLength="2" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="QuestionTable" Relationship="Test.FK_CorrectOptionTable_QuestionTable" FromRole="CorrectOptionTable" ToRole="QuestionTable" />
+  </EntityType>
+  <EntityType Name="ExamTable">
+    <Key>
+      <PropertyRef Name="ExamID" />
+    </Key>
+    <Property Name="ExamID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ImtahanAd" Type="String" Nullable="false" MaxLength="40" Unicode="true" FixedLength="false" />
+    <Property Name="YaradilmaTarixi" Type="DateTime" />
+    <NavigationProperty Name="QuestionTables" Relationship="Test.FK_QuestionTable_ExamTable" FromRole="ExamTable" ToRole="QuestionTable" />
+    <NavigationProperty Name="ResultTables" Relationship="Test.FK_ResultTable_ExamTable" FromRole="ExamTable" ToRole="ResultTable" />
+  </EntityType>
+  <EntityType Name="OptionTable">
+    <Key>
+      <PropertyRef Name="OptionID" />
+    </Key>
+    <Property Name="OptionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QuestionID" Type="Int32" Nullable="false" />
+    <Property Name="Variant" Type="String" Nullable="false" MaxLength="3500" Unicode="true" FixedLength="false" />
+    <Property Name="VariantIsare" Type="String" Nullable="false" MaxLength="2" Unicode="true" FixedLength="false" />
+    <Property Name="Sil" Type="Boolean" />
+    <NavigationProperty Name="QuestionTable" Relationship="Test.FK_OptionTable_QuestionTable" FromRole="OptionTable" ToRole="QuestionTable" />
+  </EntityType>
+  <EntityType Name="QuestionTable">
+    <Key>
+      <PropertyRef Name="QuestionID" />
+    </Key>
+    <Property Name="QuestionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ExamID" Type="Int32" Nullable="false" />
+    <Property Name="Sual" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="CorrectOptionTable" Relationship="Test.FK_CorrectOptionTable_QuestionTable" FromRole="QuestionTable" ToRole="CorrectOptionTable" />
+    <NavigationProperty Name="ExamTable" Relationship="Test.FK_QuestionTable_ExamTable" FromRole="QuestionTable" ToRole="ExamTable" />
+    <NavigationProperty Name="OptionTables" Relationship="Test.FK_OptionTable_QuestionTable" FromRole="QuestionTable" ToRole="OptionTable" />
+  </EntityType>
+  <EntityType Name="ResultTable">
+    <Key>
+      <PropertyRef Name="ResultID" />
+    </Key>
+    <Property Name="ResultID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="ExamID" Type="Int32" Nullable="false" />
+    <Property Name="DuzgunSay" Type="Int32" />
+    <Property Name="Sehvsay" Type="Int32" />
+    <Property Name="Faiz" Type="Int32" />
+    <Property Name="ImtahanTarixi" Type="DateTime" />
+    <NavigationProperty Name="ExamTable" Relationship="Test.FK_ResultTable_ExamTable" FromRole="ResultTable" ToRole="ExamTable" />
+    <NavigationProperty Name="UserTable" Relationship="Test.FK_ResultTable_UserTable" FromRole="ResultTable" ToRole="UserTable" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="UserTable">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Ad" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="Soyad" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="Adres" Type="String" MaxLength="90" Unicode="true" FixedLength="false" />
+    <Property Name="Yas" Type="Int32" Nullable="false" />
+    <Property Name="Sinif" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+    <Property Name="Qrup" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="Sifre" Type="String" Nullable="false" MaxLength="400" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ResultTables" Relationship="Test.FK_ResultTable_UserTable" FromRole="UserTable" ToRole="ResultTable" />
+  </EntityType>
+  <Association Name="FK_CorrectOptionTable_QuestionTable">
+    <End Role="QuestionTable" Type="Test.QuestionTable" Multiplicity="1" />
+    <End Role="CorrectOptionTable" Type="Test.CorrectOptionTable" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="QuestionTable">
+        <PropertyRef Name="QuestionID" />
+      </Principal>
+      <Dependent Role="CorrectOptionTable">
+        <PropertyRef Name="QuestionİD" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QuestionTable_ExamTable">
+    <End Role="ExamTable" Type="Test.ExamTable" Multiplicity="1" />
+    <End Role="QuestionTable" Type="Test.QuestionTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ExamTable">
+        <PropertyRef Name="ExamID" />
+      </Principal>
+      <Dependent Role="QuestionTable">
+        <PropertyRef Name="ExamID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ResultTable_ExamTable">
+    <End Role="ExamTable" Type="Test.ExamTable" Multiplicity="1" />
+    <End Role="ResultTable" Type="Test.ResultTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ExamTable">
+        <PropertyRef Name="ExamID" />
+      </Principal>
+      <Dependent Role="ResultTable">
+        <PropertyRef Name="ExamID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OptionTable_QuestionTable">
+    <End Role="QuestionTable" Type="Test.QuestionTable" Multiplicity="1" />
+    <End Role="OptionTable" Type="Test.OptionTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="QuestionTable">
+        <PropertyRef Name="QuestionID" />
+      </Principal>
+      <Dependent Role="OptionTable">
+        <PropertyRef Name="QuestionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ResultTable_UserTable">
+    <End Role="UserTable" Type="Test.UserTable" Multiplicity="1" />
+    <End Role="ResultTable" Type="Test.ResultTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserTable">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="ResultTable">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
